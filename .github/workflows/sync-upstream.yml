@@ -32,5 +32,5 @@ jobs:
 
       - name: Actualizar main
         run: |
-          git merge --ff-only upstream/main
+          git merge --no-edit upstream/main
           git push origin HEAD:main
