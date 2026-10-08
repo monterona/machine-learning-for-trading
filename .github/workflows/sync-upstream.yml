@@ -1,0 +1,36 @@
+name: Sincronizar repositorio original
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+      timezone: 'Europe/Madrid'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar mi fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Descargar cambios del autor
+        run: |
+          git remote add upstream https://github.com/stefan-jansen/machine-learning-for-trading.git
+          git fetch upstream main
+
+      - name: Actualizar main
+        run: |
+          git merge --ff-only upstream/main
+          git push origin HEAD:main
